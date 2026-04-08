@@ -26,7 +26,7 @@ app.use(bodyParser.json());
 const userRoute = require('./routes/userRoute');
 const projectRoute = require('./routes/projectRoute');
 const taskRoute = require('./routes/taskRoute');
-app.use('/register', userRoute);
+app.use('/signup', userRoute);
 app.use('/projects', projectRoute);
 app.use('/tasks', taskRoute);
 
