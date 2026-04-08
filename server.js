@@ -6,8 +6,9 @@ const project = require("./models/project");
 const task = require("./models/task");
 require('dotenv').config();
 const passport = require('./auth'); 
+const cors = require("cors");
 const app = express();
-
+app.use(cors());
 const logRequest = (req,res,next) => {
     console.log(`[${new Date().toLocaleString()}] Request Mode to : ${req.method} ${req.url}`);
     next();
