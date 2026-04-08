@@ -26,10 +26,6 @@ app.use(passport.initialize());
 
 const localAuthMiddleware  = passport.authenticate("local",{session:false});
 
-app.get('/',(req,res) => {
-    res.render('index',{title:"Welcome to Team Task Manager"});
-});
-
 app.get("/", (req,res) => {
     res.send("Hello team task manager.")
 })
