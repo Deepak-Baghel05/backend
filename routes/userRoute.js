@@ -8,18 +8,23 @@ router.post('/signup', async(req,res) => {
         //const data = req.body;
         const newUser = new user(req.body);
         const response = await newUser.save();
-        console.log("User registed successfully.");
-        res.status(200).json(response);
+        //console.log("User registed successfully.");
+        //res.status(200).json(response);
 
         const payload = {
             id : response.id,
             username : response.username
         }
         console.log(JSON.stringify(payload));
-        const token = generateToken(payload);
+        /*const token = generateToken(payload);
         console.log("Token is :", token);
-        res.status(200).json({token});
-
+        res.status(200).json({token});*/
+        const token = generateToken(payload);
+        res.status(200).json({
+            message: "User registered successfully",
+            user: response,
+            token: token
+        });
         //if (!response){
            // res.status(404).json({error:'Invalid User data.'});
         //}
@@ -35,23 +40,31 @@ router.post('/signup', async(req,res) => {
 router.post('/login', async(req,res) => {
     try{
         const {username,password} = req.body;
-        const user = await user.findOne({username:username});
-        if(!user){
+        //const user = await user.findOne({username:username});
+        const foundUser = await user.findOne({ username });
+        if(!foundUser){
             return res.status(401).json({error:'Invalid username or password.'});
         }
+        const isMatch = await foundUser.comparePassword(password); // if method exists
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Invalid username or password.' });
+        }
         const payload = {
-            id : user.id,
-            username : user.username
+            id : foundUser.id,
+            username : foundUser.username
         }
         const token = generateToken(payload);
-        res.status(200).json({token});
+        res.status(200).json({
+            message: "Login successful",
+            token: token
+        });
     }catch(err){
         console.log(err);
         res.status(500).json({error:'Internal Server Error.'});
     }
 })
 
-router.get('/profile',async(req,res) => {
+/*router.get('/profile',async(req,res) => {
     try{
         const userData = req.user;
         console.log("User data :",userData);
@@ -61,7 +74,20 @@ router.get('/profile',async(req,res) => {
         console.log(err);
         res.status(500).json({error:'Internal Server Error.'});
     }
-})
+})*/
+router.get('/profile', jwtAuthMiddleware, async (req, res) => {
+    try {
+        const userData = req.user; // from JWT
+        console.log("User data:", userData);
+
+        const foundUser = await user.findById(userData.id);
+
+        res.status(200).json(foundUser);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Internal Server Error.' });
+    }
+});
 
 router.get('/', async(req,res) => {
     try{

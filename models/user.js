@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre('save', async function(next){
     const user = this;
-        if(!personalbar.isModified('password'))
+        if(!user.isModified('password'))
             return next();
     try{
         const salt = await bcrypt.genSalt(10);
@@ -40,7 +40,7 @@ userSchema.pre('save', async function(next){
         user.password = hashedPassword;
         next();
         }catch(err){
-        return next(err);
+        console.log(err);
     }
 })
 
