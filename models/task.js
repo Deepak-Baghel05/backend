@@ -5,6 +5,10 @@ const taskSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    project: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "project"
+  },
     status:{
         type:String,
         enum:["To Do","In Progress","Done"],
@@ -12,10 +16,11 @@ const taskSchema = new mongoose.Schema({
     },
     assignedTo : {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "user.id",
+        ref: "user",
     },
     projectId:{
-        type:String,
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"project",
         required:true,
     },
     dueDate:{

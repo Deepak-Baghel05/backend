@@ -27,8 +27,13 @@ const projectSchema = new mongoose.Schema({
     createdAt:{
         type:Date,
         required:true,
-    }
+    },
+    user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user"
+  }
 })
+
 const project = mongoose.model("project",projectSchema);
 
 module.exports = project;
