@@ -75,6 +75,14 @@ router.post('/login', async(req,res) => {
         res.status(500).json({error:'Internal Server Error.'});
     }
 })*/
+
+router.get('/dashboard', async (req, res) => {
+    const projects = await project.find();
+    const tasks = await task.find();
+
+    res.render('dashboard', { projects, tasks });
+});
+
 router.get('/profile', jwtAuthMiddleware, async (req, res) => {
     try {
         const userData = req.user; // from JWT

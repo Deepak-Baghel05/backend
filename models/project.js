@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const projectSchema = new mongoose.Schema({
     projectName:{
         type:String,
-        reuired:true,
+        required:true,
     },
     description:{
         type:String,
@@ -20,10 +20,10 @@ const projectSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    tasks:{
-        type:String,
-        "ref":"task.id",   
-    },
+    tasks:[{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "task"
+}],
     createdAt:{
         type:Date,
         required:true,

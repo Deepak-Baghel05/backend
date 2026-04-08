@@ -9,6 +9,13 @@ const passport = require('./auth');
 const cors = require("cors");
 const app = express();
 app.use(cors());
+const path = require("path");
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "../views"));
+
+app.use(express.static(path.join(__dirname, "../public")));
+
 const logRequest = (req,res,next) => {
     console.log(`[${new Date().toLocaleString()}] Request Mode to : ${req.method} ${req.url}`);
     next();
@@ -16,7 +23,13 @@ const logRequest = (req,res,next) => {
 app.use(logRequest);
 
 app.use(passport.initialize());
+
 const localAuthMiddleware  = passport.authenticate("local",{session:false});
+
+app.get('/',(req,res) => {
+    res.render('index',{title:"Welcome to Team Task Manager"});
+});
+
 app.get("/", (req,res) => {
     res.send("Hello team task manager.")
 })
